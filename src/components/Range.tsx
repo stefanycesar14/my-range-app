@@ -1,8 +1,7 @@
-// src/components/Range.tsx
 import React, { useEffect, useState } from 'react';
 import useRange from '../hooks/useRange';
 import useFetchRange from '../hooks/useFetchRange';
-import styles from '@/styles/Range.module.css';
+import styles from '../styles/Range.module.css';
 
 interface RangeProps {
   apiUrl: string;
@@ -37,31 +36,47 @@ const Range = ({ apiUrl, type }: RangeProps) => {
     return 0;
   };
 
+  const getColorFromGradient = (value: number) => {
+    const percentage = getProportionalLeft(value) / 100;
+    const color1 = { r: 224, g: 195, b: 252 };
+    const color2 = { r: 142, g: 197, b: 252 };
+    const r = color1.r + percentage * (color2.r - color1.r);
+    const g = color1.g + percentage * (color2.g - color1.g);
+    const b = color1.b + percentage * (color2.b - color1.b);
+    return `rgb(${r}, ${g}, ${b})`;
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   if (type === 'fixed' && fixedValues.length > 0) {
     return (
       <div className={styles.container}>
+        <h1 className={styles.title}>Exercise 2</h1>
         <div className={styles.rangeContainer} ref={sliderRef}>
           <div
             className={styles.ball}
-            style={{ left: `${getProportionalLeft(range.min)}%` }}
+            style={{
+              left: `${getProportionalLeft(range.min)}%`,
+              background: getColorFromGradient(range.min),
+            }}
             onMouseDown={(e) => handleMouseDown(e, 'min')}
             ref={minBallRef}
-          ></div>
+          >
+            {range.min}
+          </div>
           <div
             className={styles.ball}
-            style={{ left: `${getProportionalLeft(range.max)}%` }}
+            style={{
+              left: `${getProportionalLeft(range.max)}%`,
+              background: getColorFromGradient(range.max),
+            }}
             onMouseDown={(e) => handleMouseDown(e, 'max')}
             ref={maxBallRef}
-          ></div>
+          >
+            {range.max}
+          </div>
           <div className={styles.slider}></div>
-        </div>
-        <div className={styles.labels}>
-          {fixedValues.map((value, index) => (
-            <label key={index}>{value}</label>
-          ))}
         </div>
       </div>
     );
@@ -69,27 +84,36 @@ const Range = ({ apiUrl, type }: RangeProps) => {
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.title}>Exercise 1</h1>
       <div className={styles.rangeContainer} ref={sliderRef}>
         <div
           className={styles.ball}
-          style={{ left: `${((range.min - initialMin) / (initialMax - initialMin)) * 100}%` }}
+          style={{
+            left: `${((range.min - initialMin) / (initialMax - initialMin)) * 100}%`,
+            background: getColorFromGradient(range.min),
+          }}
           onMouseDown={(e) => handleMouseDown(e, 'min')}
           ref={minBallRef}
-        ></div>
+        >
+          {range.min}
+        </div>
         <div
           className={styles.ball}
-          style={{ left: `${((range.max - initialMin) / (initialMax - initialMin)) * 100}%` }}
+          style={{
+            left: `${((range.max - initialMin) / (initialMax - initialMin)) * 100}%`,
+            background: getColorFromGradient(range.max),
+          }}
           onMouseDown={(e) => handleMouseDown(e, 'max')}
           ref={maxBallRef}
-        ></div>
+        >
+          {range.max}
+        </div>
         <div className={styles.slider}></div>
-      </div>
-      <div className={styles.labels}>
-        <label>{range.min}</label>
-        <label>{range.max}</label>
       </div>
     </div>
   );
 };
 
 export default Range;
+
+

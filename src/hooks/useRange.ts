@@ -1,4 +1,3 @@
-// src/hooks/useRange.ts
 import { useState, useRef } from 'react';
 
 interface Range {
